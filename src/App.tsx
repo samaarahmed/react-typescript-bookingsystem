@@ -1,11 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-
+import Homepage from './components/Homepage';
+import Minasidor from './components/Minasidor';
 function App() {
   return (
     <div>
-      <h1>Hello to new project</h1>
+      <Minasidor/>
     </div>
   );
 }
