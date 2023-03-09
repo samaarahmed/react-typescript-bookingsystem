@@ -1,13 +1,19 @@
-import { EnumType } from "typescript";
+enum BookingType{
+  Hemstädning,
+  Kontorstädning,
+  Flytttädning,
+  Fönsterputsning,
+  Trappstädning
+}
 
 interface IBooking {
     id: string;
     date: string;
     time: string;
-    type : EnumType;
+    type : BookingType,
     cleaner:string;
     status: boolean;
   }
   
 
-  export type {IBooking}
+  export type {IBooking,BookingType}

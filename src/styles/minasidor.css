@@ -5,6 +5,10 @@
     display: flex;
   
 }
+h1{
+    color: blueviolet;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 .done{
     
         background-color:darkmagenta;
@@ -17,7 +21,7 @@
 .pending{
     background-color: chocolate;
     width: 60%;
-    margin-left: 5%;
+    margin-left: 2%;
     border-radius: 2%;
     padding: 10px;
   
