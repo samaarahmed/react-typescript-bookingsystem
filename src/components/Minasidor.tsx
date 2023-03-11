@@ -8,7 +8,7 @@ import "../styles/minasidor.css"
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import {  IBooking } from '../interfaces';
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection,deleteDoc, doc, getDocs, orderBy, Query, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase.config';
 
 
@@ -20,18 +20,10 @@ function Minasidor(){
 
     const bookingsCollectionRef = collection(db,"bookings")
 
-    const bookingSort = (a:IBooking,b:IBooking)=>{
-
-      const date1 = new Date(a.date)
-      const date2 = new Date(b.date)
-      if(date1>date2) return 1
-      else if(date1<date2) return -1
-      else return 0
-    }
   
 
     const getDoneBookings = async() =>{
-      const condition = query(bookingsCollectionRef, where("status", "==",true))
+      const condition = query(bookingsCollectionRef, where("status", "==",true) ,orderBy("date"))
       const data = await getDocs(condition);
       setDoneBookings(data.docs.map((doc)=>({...(doc.data()as IBooking), id:doc.id,})));
 
@@ -39,7 +31,7 @@ function Minasidor(){
   };
 
   const getPendingBookings = async() =>{
-    const condition = query(bookingsCollectionRef, where("status", "==",false))
+    const condition = query(bookingsCollectionRef, where("status", "==",false), orderBy("date"))
     const data = await getDocs(condition);
     setPendingBookings(data.docs.map((doc)=>({...(doc.data()as IBooking), id:doc.id,})));
 
@@ -68,8 +60,10 @@ function Minasidor(){
     }
 
     const createBooking = async()=>{
+      const condition = query(bookingsCollectionRef, where("data", "!=", formData.date))
 
-      await addDoc(bookingsCollectionRef,{date:formData.date,time:formData.time,cleaner:formData.cleaner,type:formData.type,status:false,kund:formData.kund})
+
+      await addDoc(bookingsCollectionRef,{date:formData.date,time:formData.time,cleaner:formData.cleaner,type:formData.type,status:false,kund:formData.kund},)
       getPendingBookings()
     }
 
@@ -181,7 +175,7 @@ return(
             value={formData.cleaner}
             onChange = {handleChange}
           >
-            <option disabled selected value="">Välj</option>
+            <option  value=""> Välj </option>
 
             <option value="James Bond">James Bond</option>
             <option value="Spiderman">Spiderman</option>
@@ -203,3 +197,5 @@ return(
 }
 
 export default Minasidor
+
+
