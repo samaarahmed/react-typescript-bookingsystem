@@ -16,6 +16,7 @@ function Minasidor(){
 
     const [doneBookings,setDoneBookings] = useState<IBooking[]>([]);
     const [pendingBookings,setPendingBookings] = useState<IBooking[]>([]);
+    const [isChecked,setisChecked] = useState([])
 
 
     const bookingsCollectionRef = collection(db,"bookings")
@@ -55,16 +56,33 @@ function Minasidor(){
         kund:"Messi"
     })
 
+
+    const handleCheckbox = async(e:any) =>{
+      const {value,checked} = e.target
+      console.log(value)
+      if(checked){
+        await deleteDoc(doc(bookingsCollectionRef,value))  
+        getPendingBookings()
+    
+      }
+    }
+
     const handleChange = (event:React.ChangeEvent<HTMLInputElement|HTMLSelectElement>)=>{
         setFormData({...formData,[event.target.name]:event?.target.value})
     }
 
     const createBooking = async()=>{
-      const condition = query(bookingsCollectionRef, where("data", "!=", formData.date))
+     if( pendingBookings.find(item=>item.date === formData.date))
+{
+  console.log("Bokning finns redan med samma datum")
+  alert("Bokning finns redan med samma datum")
 
-
+}
+else
+      
       await addDoc(bookingsCollectionRef,{date:formData.date,time:formData.time,cleaner:formData.cleaner,type:formData.type,status:false,kund:formData.kund},)
       getPendingBookings()
+    
     }
 
     const updateBooking = async (booking:IBooking)=>{
@@ -109,11 +127,14 @@ return(
   <ListItem key={booking.id}>
     <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner}    />
       <IconButton >
+        <input type="checkbox" value={booking.id}  onChange = {(e) => handleCheckbox(e)}
+        />
         <DeleteIcon />
       </IconButton>      
   </ListItem>
   ))}
 </List>
+<button onClick={()=>handleCheckbox}>Delete</button>
     </Grid>
     </Grid>
     </div>
@@ -130,6 +151,7 @@ return(
     <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner}    />
       <IconButton  onClick={()=>deleteBooking(booking)}  >
         <DeleteIcon />
+        <button>Edit</button>
       </IconButton>      
   </ListItem>
     ))}
