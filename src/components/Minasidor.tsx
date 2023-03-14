@@ -11,12 +11,18 @@ import { useEffect, useState } from 'react';
 import {  IBooking } from '../interfaces';
 import { addDoc, collection,deleteDoc, doc, getDocs, orderBy, Query, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase.config';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 
 function Minasidor(){
 
     const [doneBookings,setDoneBookings] = useState<IBooking[]>([]);
     const [pendingBookings,setPendingBookings] = useState<IBooking[]>([]);
+    const [open,setOpen] = useState(false)
    // const [isChecked,setisChecked] = useState<IBooking[]>([])
 
 
@@ -57,6 +63,14 @@ function Minasidor(){
         kund:"Messi"
     })
 
+    const [updateForm,setUpdateForm] = useState({
+      date : "",
+      time : "",
+      cleaner: "",
+      type :"",
+
+    })
+
 
     const handleCheckbox = async (e:any) =>{
       const {value,checked} = e.target
@@ -84,6 +98,7 @@ function Minasidor(){
 
     const handleChange = (event:React.ChangeEvent<HTMLInputElement|HTMLSelectElement>)=>{
         setFormData({...formData,[event.target.name]:event?.target.value})
+        setUpdateForm({...updateForm,[event.target.name]:event.target.value})
     }
 
     const createBooking = async()=>{
@@ -99,14 +114,29 @@ else
       getPendingBookings()
     
     }
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+  
 
     const updateBooking = async (booking:IBooking)=>{
-
+      console.log(booking.id)
       await updateDoc (doc(bookingsCollectionRef,booking.id ),{
 
-      }
-      )
+        date:updateForm.date,
+        time:updateForm.time,
+        cleaner:updateForm.cleaner,
+        type:updateForm.type
 
+      })
+
+      getPendingBookings()
+      handleClose()
+      
     }
 
     const deleteBooking = async(booking:IBooking) => {
@@ -120,10 +150,14 @@ else
 
     const handleSubmit =(event : React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
+        if(formData.type==="" || formData.date === "" || formData.time === "" || formData.cleaner === ""){
+          alert("All fields are mandatory!!")
+        }
+        else
         createBooking()
+        alert("Booking added succesfully")
         console.log(formData)
  }
-
 
 
 return(
@@ -164,13 +198,61 @@ return(
     {pendingBookings.map((booking)=>(
 
   <ListItem key={booking.id}>
-    <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner}    />
+    <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner }    />
       <IconButton  onClick={()=>deleteBooking(booking)}  >
         <DeleteIcon />
       </IconButton>    
-      <IconButton>
+      <IconButton  onClick={handleClickOpen}>
         <EditIcon/>
         </IconButton>  
+
+        <Dialog  open ={open} onClose={handleClose}>
+        <DialogTitle>Uppdatera Bokning</DialogTitle>
+        <DialogContent >
+        <form className='container' >
+  <div>
+      <input type="radio" name="type" id="Hemstädning" value ="Hemstädning" onChange ={handleChange} /> Hemstädning
+      <input type="radio" name="type" id="Kontorstädning" value= "Kontorstädning" onChange ={handleChange}/>Kontorstädning
+      <input type="radio" name="type" id="Flytttädning" value="Flyttstädning" onChange ={handleChange} />Flytttädning
+      <input type="radio" name="type" id="Fönsterputsning" value="Fönsterputsning" onChange ={handleChange}/>Fönsterputsning
+      <input type="radio" name="type" id="Trappstädning" value="Trappstädning" onChange ={handleChange}/>Trappstädning
+
+    </div>
+
+  <div>
+    <p>datum</p>
+    <label htmlFor="date"></label>
+    <input type="date" name="date" id="date" value={updateForm.date} onChange={handleChange}/>
+  </div>
+  <div>
+    <p>Tid</p>
+    <label htmlFor="time"></label>
+    <input type="time" name="time" id="time" value={updateForm.time} onChange = {handleChange} />
+  </div>
+
+  <div>
+    <label htmlFor="cleaner">Städare</label>
+    <select
+      name="cleaner"
+      id="cleaner"
+      value={updateForm.cleaner}
+      onChange = {handleChange}
+    >
+      <option  value=""> Välj </option>
+
+      <option value="James Bond">James Bond</option>
+      <option value="Spiderman">Spiderman</option>
+      <option value="Batman">Batman</option>
+    </select>
+  </div>
+</form>
+        </DialogContent>
+        <DialogActions >
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={()=>updateBooking(booking)}>Update</Button>
+        </DialogActions>
+      </Dialog>
+
   </ListItem>
     ))}
 
@@ -180,6 +262,8 @@ return(
     </div>
 
     </div>
+
+
     
     <div className="booking">
     <h2>lägg till ny boking</h2>
@@ -229,6 +313,7 @@ return(
 
     </div>
 </div>
+
     </div>
 
 )

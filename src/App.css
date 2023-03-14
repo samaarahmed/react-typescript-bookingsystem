@@ -11,6 +11,12 @@ justify-items: center;
 
 
 }
+.welcome{
+  background-color:rgba(255, 127, 80, 0.552);
+  width: 60%;
+  margin-left: 20%;
+
+}
 
 img{
   height: 70px;

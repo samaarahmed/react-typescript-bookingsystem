@@ -9,13 +9,11 @@ function Homepage (){
     return(
 
         <div className="container">
-        <header>
-        <img src={logo} alt="logo" />
-        <a href="">Home</a>
-        <a href="">Mina sidor</a>
-    </header>
     <body>
-        <Minasidor/>
+      <div className='welcome'>
+      <h1>Välkommen till Städafint </h1>
+      <p>Din lokala städfirma , vi erbjuder våra städtjänster i hela Kronoberg!</p>
+      </div>
     </body>
   <footer>
     <div className="adress">
