@@ -1,4 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -16,7 +17,7 @@ function Minasidor(){
 
     const [doneBookings,setDoneBookings] = useState<IBooking[]>([]);
     const [pendingBookings,setPendingBookings] = useState<IBooking[]>([]);
-    const [isChecked,setisChecked] = useState([])
+   // const [isChecked,setisChecked] = useState<IBooking[]>([])
 
 
     const bookingsCollectionRef = collection(db,"bookings")
@@ -57,15 +58,29 @@ function Minasidor(){
     })
 
 
-    const handleCheckbox = async(e:any) =>{
+    const handleCheckbox = async (e:any) =>{
       const {value,checked} = e.target
       console.log(value)
       if(checked){
+        
         await deleteDoc(doc(bookingsCollectionRef,value))  
-        getPendingBookings()
-    
+
+        //setisChecked([...isChecked,value])
       }
+      /*else {
+        setisChecked(isChecked.filter((e)=>e!== value))
+      }  */ 
     }
+
+    const deleteAll =async () => {
+
+    console.log("button working")
+        
+        getDoneBookings()  
+
+    }
+
+
 
     const handleChange = (event:React.ChangeEvent<HTMLInputElement|HTMLSelectElement>)=>{
         setFormData({...formData,[event.target.name]:event?.target.value})
@@ -129,12 +144,13 @@ return(
       <IconButton >
         <input type="checkbox" value={booking.id}  onChange = {(e) => handleCheckbox(e)}
         />
-        <DeleteIcon />
       </IconButton>      
   </ListItem>
   ))}
 </List>
-<button onClick={()=>handleCheckbox}>Delete</button>
+<IconButton  onClick={deleteAll}  >
+        <DeleteIcon />
+      </IconButton>      
     </Grid>
     </Grid>
     </div>
@@ -151,8 +167,10 @@ return(
     <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner}    />
       <IconButton  onClick={()=>deleteBooking(booking)}  >
         <DeleteIcon />
-        <button>Edit</button>
-      </IconButton>      
+      </IconButton>    
+      <IconButton>
+        <EditIcon/>
+        </IconButton>  
   </ListItem>
     ))}
 
@@ -172,7 +190,7 @@ return(
         <div>
             <input type="radio" name="type" id="Hemstädning" value ="Hemstädning" onChange ={handleChange} /> Hemstädning
             <input type="radio" name="type" id="Kontorstädning" value= "Kontorstädning" onChange ={handleChange}/>Kontorstädning
-            <input type="radio" name="type" id="Flytttädning" value="Flytttädning" onChange ={handleChange} />Flytttädning
+            <input type="radio" name="type" id="Flytttädning" value="Flyttstädning" onChange ={handleChange} />Flytttädning
             <input type="radio" name="type" id="Fönsterputsning" value="Fönsterputsning" onChange ={handleChange}/>Fönsterputsning
             <input type="radio" name="type" id="Trappstädning" value="Trappstädning" onChange ={handleChange}/>Trappstädning
 
