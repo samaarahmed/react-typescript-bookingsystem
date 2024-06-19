@@ -22,8 +22,8 @@ function Minasidor(){
 
     const [doneBookings,setDoneBookings] = useState<IBooking[]>([]);
     const [pendingBookings,setPendingBookings] = useState<IBooking[]>([]);
-    const [open,setOpen] = useState(false)
-   // const [isChecked,setisChecked] = useState<IBooking[]>([])
+    const [open,setOpen] = useState(false) // For update function 
+
 
 
     const bookingsCollectionRef = collection(db,"bookings")
@@ -79,11 +79,7 @@ function Minasidor(){
         
         await deleteDoc(doc(bookingsCollectionRef,value))  
 
-        //setisChecked([...isChecked,value])
       }
-      /*else {
-        setisChecked(isChecked.filter((e)=>e!== value))
-      }  */ 
     }
 
     const deleteAll =async () => {
@@ -114,7 +110,8 @@ else
       getPendingBookings()
     
     }
-    const handleClickOpen = () => {
+    const handleClickOpen = (bokning:IBooking) => {
+      console.log(bokning.id)
       setOpen(true);
     };
   
@@ -202,7 +199,7 @@ return(
       <IconButton  onClick={()=>deleteBooking(booking)}  >
         <DeleteIcon />
       </IconButton>    
-      <IconButton  onClick={handleClickOpen}>
+      <IconButton  onClick={()=>handleClickOpen(booking)}>
         <EditIcon/>
         </IconButton>  
 
