@@ -9,7 +9,7 @@ import "../styles/minasidor.css"
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import {  IBooking } from '../interfaces';
-import { addDoc, collection,deleteDoc, doc, getDocs, orderBy, Query, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection,deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -51,7 +51,7 @@ function Minasidor(){
     useEffect(() => {
      getDoneBookings();
      getPendingBookings();
-    },[]);
+    },[getDoneBookings,getPendingBookings]);
 
 
 

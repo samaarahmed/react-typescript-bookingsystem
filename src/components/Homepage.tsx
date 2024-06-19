@@ -2,8 +2,6 @@ import twitter from '../images/twitter.png'
 import facebook from '../images/facebook.png'
 import insta from '../images/insta.jpg'
 import youtube from '../images/youtube.png'
-import logo from '../images/logo.png'
-import Minasidor from './Minasidor'
 function Homepage (){
 
     return(
