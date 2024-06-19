@@ -51,7 +51,7 @@ function Minasidor(){
     useEffect(() => {
      getDoneBookings();
      getPendingBookings();
-    },[getDoneBookings,getPendingBookings]);
+    });
 
 
 
@@ -171,7 +171,10 @@ return(
     <List>
         {doneBookings.map((booking)=>(
   <ListItem key={booking.id}>
-    <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner}    />
+<ListItemText 
+  key={booking.id} 
+  primary={`Date: ${booking.date}, Time: ${booking.time}, Type: ${booking.type}, Cleaner: ${booking.cleaner}`} 
+/>
       <IconButton >
         <input type="checkbox" value={booking.id}  onChange = {(e) => handleCheckbox(e)}
         />
@@ -195,7 +198,10 @@ return(
     {pendingBookings.map((booking)=>(
 
   <ListItem key={booking.id}>
-    <ListItemText key={booking.id} primary = {"Date:" + booking.date+" "+",Time: "+booking.time+" "+"Type:"+ booking.type +" "+ ",Cleaner:" + booking.cleaner }    />
+<ListItemText 
+  key={booking.id} 
+  primary={`Date: ${booking.date}, Time: ${booking.time}, Type: ${booking.type}, Cleaner: ${booking.cleaner}`} 
+/>
       <IconButton  onClick={()=>deleteBooking(booking)}  >
         <DeleteIcon />
       </IconButton>    
